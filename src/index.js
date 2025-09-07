@@ -12,11 +12,10 @@ const startAndSetServer = ()=>{
     app.use('/api', apiRoutes);
     app.listen(port,async ()=>{
         console.log("Server started on port:",port);
-        db.sequelize.sync({alter : true})
-        const u1 = await User.findByPk(2);
-        const r1 = await Role.findByPk(1);
-        u1.addRole(r1);
-
+        //db.sequelize.sync({alter : true})
+        // const u1 = await User.findByPk(4);
+        // const r1 = await Role.findByPk(2);
+        // u1.addRole(r1);
     })
 }
 startAndSetServer();

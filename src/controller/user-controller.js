@@ -88,9 +88,31 @@ const isAuthenticated = async (req, res) => {
   }
 };
 
+const isAdmin = async (req,res) => {
+  try {
+    const response = await userService.isAdmin(req.body.id);
+    //this will hit only if you have assigned role to user ie in the user_roles table there is data otherwise catch block will hit
+    return res.status(200).json({
+      data: response,
+      success: true,
+      message: "User's admin role is verified.",
+      error: {},
+    });
+  } catch (error) {
+     console.log(error);
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Something went wrong in the user controller",
+      error: error,
+    });
+  }
+}
+
 module.exports = {
   create,
   destroy,
   signIn,
-  isAuthenticated
+  isAuthenticated,
+  isAdmin
 };
