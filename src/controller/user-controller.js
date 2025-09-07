@@ -44,7 +44,53 @@ const destroy = async (req, res) => {
   }
 };
 
+const signIn = async (req, res) => {
+  try {
+    const response = await userService.signIn(
+      req.body.email,
+      req.body.password
+    );
+    return res.status(200).json({
+      data: response,
+      success: true,
+      message: "Successfully signin the user",
+      error: {},
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Something went wrong in the user controller",
+      error: error,
+    });
+  }
+};
+
+const isAuthenticated = async (req, res) => {
+  try {
+    const token = req.headers["x-access-header"]; 
+    const response = await userService.isAuthenticated(token);
+    return res.status(200).json({
+      data: response,
+      success: true,
+      message: "User is authenticated and user is valid",
+      error: {},
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Something went wrong in the user controller",
+      error: error,
+    });
+  }
+};
+
 module.exports = {
-    create,
-    destroy
-}
+  create,
+  destroy,
+  signIn,
+  isAuthenticated
+};
