@@ -1,6 +1,7 @@
 const UserRepository = require("../repository/user-repo");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const AppError = require('../utils/error-code')
 const { JWT_KEY } = require("../config/serverconfig");
 class UserService {
   constructor() {
@@ -12,8 +13,14 @@ class UserService {
       const response = await this.userRepository.create(data);
       return response;
     } catch (error) {
+      if(error.name === 'SequelizeValidationError')throw error;
       console.log("something went wrong in the user service");
-      throw error;
+      throw new AppError(
+        'Server Error',
+        'Something went wrong in the service layer',
+        'Logical Issue',
+        500
+      );
     }
   }
 
@@ -49,11 +56,9 @@ class UserService {
         throw {error : 'Invalid token'}
       }
       const user = await this.userRepository.getById(response.id);
-      if(!user){
-        throw {error: 'no user is found with corressponding token'}
-      }
       return user.id;
     } catch (error) {
+      if(error.name === 'AttributeNotFound')throw error;
       console.log("Something went wrong in the auth process.");
       throw error;
     }
